@@ -60,8 +60,8 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 		if (this.primary_action || (this.action.primary && this.action.primary.onsubmit)) {
 			this.set_primary_action(
 				this.primary_action_label ||
-					this.action.primary.label ||
-					__("Submit", null, "Primary action in dialog"),
+				this.action.primary.label ||
+				__("Submit", null, "Primary action in dialog"),
 				this.primary_action || this.action.primary.onsubmit
 			);
 		}
@@ -209,12 +209,14 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 		const primary_btn = this.get_primary_btn().removeClass("hide").html(label);
 		const spinner = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style="width: 13px; height: 13px; animation: spin 1s linear infinite;"><circle opacity=".25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path opacity=".25" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg>`;
 		if (typeof click == "function") {
-			primary_btn.off("click").on("click", function () {
+			primary_btn.off("click").on("click", function (e) {
+				e.preventDefault();
+				e.stopPropagation();
 				me.primary_action_fulfilled = true;
 				// get values and send it
 				// as first parameter to click callback
 				// if no values then return
-				var values = me.get_values();
+				var values = me.fields && me.fields.length ? me.get_values() : {};
 				if (!values) return;
 				const action = click.apply(me, [values]);
 				if (action && typeof action.then === "function") {
@@ -229,11 +231,10 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 						.html(
 							`<div class="d-flex align-items-center justify-content-center" style="gap: 0.45rem;">
 									${spinner}
-								${
-									loading_label
-										? `<span class="text-muted" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${loading_label}</span>`
-										: ""
-								}
+								${loading_label
+								? `<span class="text-muted" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${loading_label}</span>`
+								: ""
+							}
 							</div>`
 						);
 
@@ -376,7 +377,7 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 		action && action_button.click(action);
 	}
 
-	add_custom_button() {}
+	add_custom_button() { }
 };
 
 frappe.ui.hide_open_dialog = () => {

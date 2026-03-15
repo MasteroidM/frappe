@@ -852,7 +852,7 @@ class User(Document):
 			indicator="orange",
 			primary_action={
 				"label": _("Add Roles"),
-				"client_action": "frappe.set_route",
+				"client_action": "frappe.ui.navigate_to_user_roles",
 				"args": ["Form", self.doctype, self.name],
 			},
 		)

@@ -522,3 +522,11 @@ frappe.ui.form.on("User Session Display", {
 			.then(() => frm.reload_doc());
 	},
 });
+
+frappe.ui.navigate_to_user_roles = function (args) {
+	if (!frappe.msg_dialog || !frappe.msg_dialog.$wrapper.is(":visible")) {
+		return;
+	}
+	frappe.hide_msgprint(true);
+	window.location.hash = "roles_permissions_tab";
+};

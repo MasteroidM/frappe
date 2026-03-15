@@ -223,12 +223,12 @@ frappe.msgprint = function (msg, title, is_minimizable, re_route) {
 			data.primary_action.client_action &&
 			typeof data.primary_action.client_action === "string"
 		) {
-			let parts = data.primary_action.client_action.split(".");
-			let obj = window;
-			for (let part of parts) {
-				obj = obj[part];
-			}
 			data.primary_action.action = () => {
+				let obj = window;
+				for (let part of data.primary_action.client_action.split(".")) {
+					obj = obj[part];
+					if (!obj) break;
+				}
 				if (typeof obj === "function") {
 					obj(data.primary_action.args);
 				}
